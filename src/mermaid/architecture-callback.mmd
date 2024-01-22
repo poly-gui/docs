@@ -1,0 +1,16 @@
+sequenceDiagram
+    activate Portable Layer
+    note left of Portable Layer: New handle "1" to onMyButtonPress()
+    deactivate Portable Layer
+    Portable Layer ->> Native Layer: Create a button, on click callback handle is "1"
+    activate Native Layer
+    note right of Native Layer: Creates a button
+    deactivate Native Layer
+    note over Portable Layer, Native Layer: Program continues...
+    note right of Native Layer: Button clicked!
+    Native Layer ->> Portable Layer: Call function with handle "1"
+    activate Portable Layer
+    note left of Portable Layer: Finds onMyButtonPress() with "1"
+    note left of Portable Layer: Calls onMyButtonPress()
+    deactivate Portable Layer
+    note over Portable Layer, Native Layer: Button click handled!
