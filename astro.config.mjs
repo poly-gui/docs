@@ -7,6 +7,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: "Poly",
+			description: "Documentation for Poly, a cross-platform GUI framework.",
 			defaultLocale: "root",
 			social: {
 				github: "https://github.com/poly-gui"
