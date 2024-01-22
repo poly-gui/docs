@@ -70,11 +70,11 @@ This is an overview of the `nanoc` command:
 nanoc --language=[ts|swift|c++] [--factory-out=path] [...input-files]
 ```
 
-|     Argument     |                                                Description                                                |
-|:----------------:|:---------------------------------------------------------------------------------------------------------:|
-|   `--language`   |                    (Required) The programming language the generated code should be in                    |
-| `--factory-out`  |               (Optional) The directory where the message factory code file should be put in               |
-| `...input-files` | (Required) A space-delimited list of relative/absolute paths to the schema files that should be processed |
+|   Argument    |                                                Description                                                |
+|:-------------:|:---------------------------------------------------------------------------------------------------------:|
+|  `language`   |                    (Required) The programming language the generated code should be in                    |
+| `factory-out` |               (Optional) The directory where the message factory code file should be put in               |
+| `input-files` | (Required) A space-delimited list of relative/absolute paths to the schema files that should be processed |
 
 :::note[What is the message factory?]
 The message factory file contains a factory function that creates the correct type of message

@@ -4,8 +4,6 @@ description: Get started building your docs site with Starlight.
 template: splash
 hero:
   tagline: A cross-platform GUI framework for developing OS-native application with one code base.
-  image:
-    file: ../../assets/houston.webp
   actions:
     - text: Example Guide
       link: /guides/example/
@@ -18,19 +16,18 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
-
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+<CardGrid>
+	<Card title="Create Real Native applications" icon="pencil">
+		Poly enables developers to build true native applications, such as AppKit, Gtk, and WinUI.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Language Agnostic" icon="translate">
+		Poly is language-agnostic, so any programming language can be used to develop Poly applications,
+		as long as an implementation is available.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Write Once, Run Anywhere" icon="rocket">
+		Write application logic once, and the application will run on all supported platforms.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Work in Progress!" icon="open-book">
+		Poly is still a work-in-progress. Any feedback is appreciated!
 	</Card>
 </CardGrid>

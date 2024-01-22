@@ -8,8 +8,15 @@ export default defineConfig({
 			title: "Poly",
 			defaultLocale: "root",
 			social: {
-				github: "https://github.com/withastro/starlight"
+				github: "https://github.com/poly-gui"
 			},
+			logo: {
+				light: "./src/assets/logo-black.svg",
+				dark: "./src/assets/logo-white.svg"
+			},
+			customCss: [
+				"./src/styles/style.css"
+			],
 			sidebar: [
 				{
 					label: "Introduction",
