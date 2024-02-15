@@ -91,6 +91,10 @@ A field can also store any user-defined enums. Use the name of the enum as the t
 	description="Learn how to define an Enum in NanoPack"
 	href="../defining-enum/" />
 
+## Any
+
+A field can be of any arbitrary type by specifying the type as `any`. How the `any` type is handled depends on the programming language. Refer to the corresponding language guide for more details.
+
 ## Type nesting
 
 Since arrays and maps can store values of any type, you can go ham with the type!
@@ -98,14 +102,14 @@ Since arrays and maps can store values of any type, you can go ham with the type
 ```yaml
 CrazyMessage:
   # Array of map of string to int32
-  field_1: <string:int32>[]:0
+  field_1: <string:int32>[]
 
   # Map of int32 to string arrays
-  field_2: <int32:string[]>:1
+  field_2: <int32:string[]>
 
   # Array of map of strings to string arrays
-  field_3: <string:string[]>[]:2
+  field_3: <string:string[]>[]
 
   # Map of strings to map of int32 to int8
-  field_4: <string:<int32:int8>>:4
+  field_4: <string:<int32:int8>>
 ```

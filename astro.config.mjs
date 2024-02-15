@@ -30,7 +30,8 @@ export default defineConfig({
 				{
 					label: "Guides",
 					items: [
-						{ label: "Installation", link: "/guides/installation/" }
+						{ label: "Installation", link: "/guides/installation/" },
+						{ label: "Creating a New Project", link: "/guides/creating-project/" }
 					]
 				},
 				{

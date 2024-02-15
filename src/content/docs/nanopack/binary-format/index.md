@@ -35,9 +35,8 @@ After the type ID follows the size header, which stores the byte size of each fi
 4 bytes are used to encode the data size of each field, so the total size of the size header is `4n` bytes,
 where `n` is the number of fields the message contains.
 
-The order of the size information is determined by the field number
-assigned to each field. A field that has a field number of 0 always comes first in the header, followed by field number
-1, so on and so forth.
+The order of the size information is determined by the order in which the fields are declared in the schema.
+Fields that are declared first in the schema file will appear first in the buffer.
 
 Fields that contain fixed-size numbers have static sizes.
 For example, a field that stores a 32-bit integer always use 4 bytes, so its size header will always be the number 4:
