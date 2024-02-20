@@ -45,7 +45,7 @@ To declare a map type, use the following syntax:
 For example, to declare a field `my_field` that stores map of string to 32-bit integers:
 
 ```yaml
-my_field: <string:int32>:1
+my_field: <string:int32>
 ```
 
 ## Optional
@@ -54,10 +54,10 @@ A type can be made optional by adding a question mark (`?`) at the end of a type
 
 ```yaml
 # an optional array of string
-field_1: string[]?:1
+field_1: string[]?
 
 # an array of optional strings
-field_2: string?[]:2
+field_2: string?[]
 ```
 
 Except keys of maps, any type can be made optional.

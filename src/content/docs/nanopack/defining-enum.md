@@ -71,7 +71,7 @@ Since each member maps to a string value, the compiler knows to use string as th
 # Column.yml
 Column:
   typeid: 1
-  alignment: Alignment:0
+  alignment: Alignment
   # ... other fields
 ```
 
