@@ -150,7 +150,7 @@ keeps the application run loop alive.
 
 ## Making the Counter UI
 
-![A screenshot of the final counter app in macOS. The count shown in the screenshot is 10.](./src/assets/counter-app-screenshot.png)
+![A screenshot of the final counter app in macOS. The count shown in the screenshot is 10.](../../../assets/counter-app-screenshot.png)
 
 The counter UI consists of three elements: the current count, the increment button, and the decrement button, all inside a column in order.
 
