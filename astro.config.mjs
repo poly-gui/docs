@@ -31,7 +31,8 @@ export default defineConfig({
 					label: "Guides",
 					items: [
 						{ label: "Installation", link: "/guides/installation/" },
-						{ label: "Creating a New Project", link: "/guides/creating-project/" }
+						{ label: "Creating a New Project", link: "/guides/creating-project/" },
+						{ label: "Building a Simple Counter App", link: "/guides/counter-app/" }
 					]
 				},
 				{
