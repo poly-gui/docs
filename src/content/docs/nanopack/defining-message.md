@@ -80,8 +80,8 @@ Let's create a simple message called `GameObject` that represents an object in a
 # GameObject.yml
 GameObject:
   typeid: 1
-  id: number:0
-  position: number[]:1
+  id: number
+  position: number[]
 ```
 
 A special type of `GameObject` can be created by inheriting `GameObject`:
@@ -90,8 +90,8 @@ A special type of `GameObject` can be created by inheriting `GameObject`:
 # Block.yml
 Block::GameObject:
   typeid: 2
-  durability: number:0
-  material: string:1
+  durability: number
+  material: string
 ```
 
 Now, all the fields defined in `GameObject` are accessible in `Block` as well.
@@ -104,7 +104,7 @@ Consider the following example:
 ```yaml
 Box::GameObject:
   typeid: 3
-  content: GameObject[]:0
+  content: GameObject[]
 ```
 
 The `content` field stores all `GameObject`s into an array, which can be `GameObject` itself
