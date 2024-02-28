@@ -13,7 +13,6 @@ Below is an overview of the syntax of defining a NanoPack message.
 
 ```yaml
 <MessageNameInPascalCase>:
-  typeid: 1 # required
   <my_field>: <data-type>
   <my_second_field>: <data-type>
   # ...
@@ -23,11 +22,6 @@ Below is an overview of the syntax of defining a NanoPack message.
 :::note
 Angle bracket denotes a placeholder, and is not part of the syntax.
 :::
-
-### Type ID
-
-The reserved `typeid` field specifies the [type ID](../binary-format/) of the message.
-It has to be an integer from 1 to 4,294,967,296. **Every message is required to have a type ID.**
 
 ### Data types
 
@@ -45,7 +39,6 @@ Below is a simple NanoPack schema that defines a message called `Person`:
 ```yaml
 # Person.yml
 Person:
-  typeid: 1
   first_name: string
   last_name: string
   age: int8
@@ -56,7 +49,6 @@ Person:
 
 | Field        | Description                                                            |
 |:-------------|:-----------------------------------------------------------------------|
-| `typeid`     | Person has a type ID of 1                                              |
 | `first_name` | A string field                                                         |
 | `last_name`  | A string field                                                         |
 | `age`        | A field that stores an 8-bit integer                                   |
@@ -79,7 +71,6 @@ Let's create a simple message called `GameObject` that represents an object in a
 ```yaml
 # GameObject.yml
 GameObject:
-  typeid: 1
   id: number
   position: number[]
 ```
@@ -89,7 +80,6 @@ A special type of `GameObject` can be created by inheriting `GameObject`:
 ```yaml
 # Block.yml
 Block::GameObject:
-  typeid: 2
   durability: number
   material: string
 ```
@@ -103,7 +93,6 @@ Consider the following example:
 
 ```yaml
 Box::GameObject:
-  typeid: 3
   content: GameObject[]
 ```
 

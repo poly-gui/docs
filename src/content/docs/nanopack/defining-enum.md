@@ -70,7 +70,6 @@ Since each member maps to a string value, the compiler knows to use string as th
 ```yaml
 # Column.yml
 Column:
-  typeid: 1
   alignment: Alignment
   # ... other fields
 ```

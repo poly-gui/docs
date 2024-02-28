@@ -20,6 +20,11 @@ The first 4 bytes of every NanoPack binary stores the **type ID** of a message.
 This ID is simply a number specified in the message schema that is used to identify the type of the message.
 Without the type ID, it is impossible to determine how to correctly decode the binary into the correct message type,
 since many different types of messages can be exchanged on the wire.
+This type ID is computed automatically by [the compiler](/nanopack/code-generation/)
+by hashing the message name into a 32-bit integer.
+It can also be specified explicitly in the [NanoPack schema](/nanopack/defining-message/),
+although it is not recommended as it is hard to keep track of the list of existing type IDs
+as the number of messages grow.
 
 Type IDs of messages have to be unique within the system in which the message will be exchanged.
 In Poly's case, all the messages exchanged through the message channel have unique type IDs.
