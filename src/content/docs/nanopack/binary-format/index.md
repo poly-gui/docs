@@ -21,7 +21,7 @@ This ID is simply a number specified in the message schema that is used to ident
 Without the type ID, it is impossible to determine how to correctly decode the binary into the correct message type,
 since many different types of messages can be exchanged on the wire.
 This type ID is computed automatically by [the compiler](/nanopack/code-generation/)
-by hashing the message name into a 32-bit integer.
+by hashing the message name into a 32-bit unsigned integer.
 It can also be specified explicitly in the [NanoPack schema](/nanopack/defining-message/),
 although it is not recommended as it is hard to keep track of the list of existing type IDs
 as the number of messages grow.
