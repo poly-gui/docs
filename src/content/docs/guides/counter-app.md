@@ -74,14 +74,6 @@ const instance = runApplication(context);
 The `runApplication` function, also exported by `poly/application`,
 returns a `Promise` that will awaited at the end of the `main` function to keep the application alive.
 
-### Initializing Widgets
-
-After running the application, the TypeScript widget library, `poly-widgets`, must be initialized before the widgets are usable.
-
-```ts
-initializeWidgets(context);
-```
-
 ### Application Logic
 
 In between awaiting the instance and the call to `runApplication` is where the application logic resides,
@@ -154,135 +146,305 @@ keeps the application run loop alive.
 
 The counter UI consists of three elements: the current count, the increment button, and the decrement button, all inside a column in order.
 
-Let's define a function called `counterScreen` that encapsulates the UI code and the logic of manipulating and keeping track of the count. Create a new file called `counter-screen.ts` next to `main.ts`:
+Let's define a class called `CounterScreen` that encapsulates the UI code and the logic of manipulating and keeping track of the count. Create a new file called `counter-screen.ts` next to `main.ts`:
 
 ```ts
 // src/counter-screen.ts
 import { type ApplicationContext } from "poly/application"
-import { type Widget } from "poly-widgets"
+import { type Widget, WidgetController } from "poly-widgets"
 
-function counterScreen(context: ApplicationContext): Widget {
-  // TODO: implement me
+class CounterScreen extends WidgetController {
+  constructor(context: ApplicationContext) {
+    super(context)
+  }
 }
 
-export { counterScreen }
+export { CounterScreen }
 ```
 
-Since we need the context object in the screen, the function is defined with the `context` parameter whose type, exported by `poly/application`, is `ApplicationContext`. The function returns the UI tree which we will use later in the main function and which we are going to define now.
+`CounterScreen` subclasses `WidgetController`, which is an abstract class that defines the interface
+for a class that controls and holds references to widgets.
+In this case, `CounterScreen` will hold a reference to the counter text label because we will need it to update its content.
 
 ### Defining the UI tree
 
-`poly-widgets` exports a variety of widgets that can be composed together to form the UI:
+`poly-widgets` exports a variety of widgets that can be composed together to form the UI.
+Let's first create a `Text` to display the current count.
 
-```ts ins={4-9,14-34} del={13}
+```ts ins={4-5, 9, 11, 16-17}
 // src/counter-screen.ts
 import { type ApplicationContext } from "poly/application"
 import {
   type Widget,
-  FILL_PARENT,
-  Alignment,
-  column,
-  text,
-  button
+  Text,
 } from "poly-widgets"
 
-function counterScreen(context: ApplicationContext): Widget {
-  // TODO: implement me
-  return center(
-    column(
-      [
-        text("0", {}),
-        button("+", {
-          context,
-          onClick: () => {},
-        }),
-        button("-", {
-          context,
-          onClick: () => {},
-        }),
-      ],
-      {
-        width: FILL_PARENT,
-        height: FILL_PARENT,
-        horizontalAlignment: Alignment.CENTER,
-        verticalAlignment: Alignment.CENTER,
-      },
-    ),
-  );
+class CounterScreen extends WidgetController {
+  private count = 0
+
+  private readonly countText: Text;
+
+  constructor(context: ApplicationContext) {
+    super(context)
+
+    this.countText = new Text(context)
+    this.countText.content = `${this.count}`
+  }
 }
 
 export { counterScreen }
 ```
 
-Below lists all the widgets used:
+Here, we are creating a new instance of `Text` and settings its initial content to the initial count (`this.count`) which is 0.
+We are also storing a reference to the `Text` under `this.countText` so that we can use it later when we need to update it.
 
-- `center` centers its child widget horizontally and vertically relative to its parent. In this case, its parent is the window itself, so it will center the column relative to the window.
-- `column` aligns its children in a column in order of appearance in the array. In the code abovce, `FILL_PARENT` is specified for its width and height, which tells it to use as much space as its parent allows. `Alignment.CENTER` is set for the column's horizontal and vertical alignment, which will center the column's children horizontally and vertically relative to the column.
-- `button` creates a platform-aware button. For example, on macOS, it will be a native AppKit button. On Linux, it will be a GTK button. noop is used as the `onClick` callback in the code above as a placeholder.
+:::note
+`countText` is made `readonly` to prevent accidental re-assignment of it, but the `Text` that `countText` references can still be modified.
+[Read more about the `readonly` modifier.](https://www.typescriptlang.org/docs/handbook/2/classes.html#readonly)
+:::
 
+Let's create the increment and the decrement buttons, as well as defining the callbacks when they are clicked:
 
-### Modifying the Counter
-
-When the increment button is clicked, the counter needs to be increment, and the counter text needs to be updated. We can do that through the `onClick` callback:
-
-```ts ins={7,36,41} ins={"Stores the counter:":14-15} ins={"Generates a new tag for the counter label:":16-17} ins={"Button callbacks:":18-27} ins="tag: counterTextTag" del={35,40}
+```ts ins={6, 21-23, 25-27, 30-32, 34-36}
 // src/counter-screen.ts
 import { type ApplicationContext } from "poly/application"
 import {
   type Widget,
-  FILL_PARENT,
-  Alignment,
-  updateWidget,
-  column,
-  text,
-  button,
+  type PolyWidget,
+  Text,
+  Button,
 } from "poly-widgets"
 
-function counterScreen(context: ApplicationContext): Widget {
+class CounterScreen extends WidgetController {
+  private count = 0
 
-  let count = 0
-  
-  const counterTextTag = context.idRegistry.newId("text");
-  
-  function incrementCounter() {
-    count += 1
-    updateWidget(counterTextTag, text(`${count}`, {}), context)
-  }
-  
-  function decrementCounter() {
-    count -= 1
-    updateWidget(counterTextTag, text(`${count}`, {}), context)
+  private readonly countText: Text;
+
+  constructor(context: ApplicationContext) {
+    super(context)
+
+    this.countText = new Text(context)
+    this.countText.content = `${this.count}`
+
+    const incBtn = new Button(context);
+    incBtn.label = "+";
+    incBtn.onClick = this.incrementCounter.bind(this);
+
+    const decBtn = new Button(context);
+    decBtn.label = "-";
+    decBtn.onClick = this.decrementCounter.bind(this);
   }
 
-  return center(
-    column(
-      [
-        text("0", { tag: counterTextTag }),
-        button("+", {
-          context,
-          onClick: () => {},
-          onClick: incrementCounter,
-        }),
-        button("-", {
-          context,
-          onClick: () => {},
-          onClick: decrementCounter,
-        }),
-      ],
-      {
-        width: FILL_PARENT,
-        height: FILL_PARENT,
-        horizontalAlignment: Alignment.CENTER,
-        verticalAlignment: Alignment.CENTER,
-      },
-    ),
-  );
+  private incrementCounter() {
+
+  }
+
+  private decrementCounter() {
+
+  }
+}
+
+export { counterScreen }
+```
+
+We want to put the count text and the buttons in a column, so we are going to use the `Column` widget:
+
+```ts ins={30-33}
+// src/counter-screen.ts
+import { type ApplicationContext } from "poly/application"
+import {
+  type Widget,
+  type PolyWidget,
+  Text,
+  Button,
+  Column,
+} from "poly-widgets"
+
+class CounterScreen extends WidgetController {
+  private count = 0
+
+  private readonly countText: Text
+
+  constructor(context: ApplicationContext) {
+    super(context)
+
+    this.countText = new Text(context)
+    this.countText.content = `${this.count}`
+
+    const incBtn = new Button(context)
+    incBtn.label = "+"
+    incBtn.onClick = this.incrementCounter.bind(this)
+
+    const decBtn = new Button(context)
+    decBtn.label = "-"
+    decBtn.onClick = this.decrementCounter.bind(this)
+
+    const col = new Column(context);
+    // Center-align the children along the horizontal axis of the column
+    col.horizontalAlignment = Alignment.CENTER;
+    col.addChildren(this.countText, incBtn, decBtn);
+  }
+
+  private incrementCounter() {
+
+  }
+
+  private decrementCounter() {
+
+  }
+}
+
+export { counterScreen }
+```
+
+To center everything in the window, we are going to wrap the column with a `Center` widget:
+
+```ts ins={35-36}
+// src/counter-screen.ts
+import { type ApplicationContext } from "poly/application"
+import {
+  type Widget,
+  type PolyWidget,
+  Text,
+  Button,
+  Column,
+} from "poly-widgets"
+
+class CounterScreen extends WidgetController {
+  private count = 0
+
+  private readonly countText: Text
+
+  constructor(context: ApplicationContext) {
+    super(context)
+
+    this.countText = new Text(context)
+    this.countText.content = `${this.count}`
+
+    const incBtn = new Button(context)
+    incBtn.label = "+"
+    incBtn.onClick = this.incrementCounter.bind(this)
+
+    const decBtn = new Button(context)
+    decBtn.label = "-"
+    decBtn.onClick = this.decrementCounter.bind(this)
+
+    const col = new Column(context);
+    // Center-align the children along the horizontal axis of the column
+    col.horizontalAlignment = Alignment.CENTER;
+    col.addChildren(this.countText, incBtn, decBtn);
+
+    const center = new Center(context);
+    center.child = col;
+  }
+
+  private incrementCounter() {
+
+  }
+
+  private decrementCounter() {
+
+  }
+}
+
+export { counterScreen }
+```
+
+We need to let Poly know the root view of our screen (which is a `WidgetController`),
+so we also need to implement the `widget(): PolyWidget` method from `WidgetController`.
+
+```ts ins={15, 38, 41-43}
+// src/counter-screen.ts
+import { type ApplicationContext } from "poly/application"
+import {
+  type Widget,
+  type PolyWidget,
+  Text,
+  Button,
+  Column,
+} from "poly-widgets"
+
+class CounterScreen extends WidgetController {
+  private count = 0
+
+  private readonly countText: Text
+  private readonly rootView: PolyWidget
+
+  constructor(context: ApplicationContext) {
+    super(context)
+
+    this.countText = new Text(context)
+    this.countText.content = `${this.count}`
+
+    const incBtn = new Button(context)
+    incBtn.label = "+"
+    incBtn.onClick = this.incrementCounter.bind(this)
+
+    const decBtn = new Button(context)
+    decBtn.label = "-"
+    decBtn.onClick = this.decrementCounter.bind(this)
+
+    const col = new Column(context)
+    // Center-align the children along the horizontal axis of the column
+    col.horizontalAlignment = Alignment.CENTER
+    col.addChildren(this.countText, incBtn, decBtn)
+
+    const center = new Center(context)
+    center.child = col
+    this.rootView = center
+  }
+
+  public override widget(): PolyWidget {
+    return this.rootView
+  }
+
+  private incrementCounter() {
+
+  }
+
+  private decrementCounter() {
+
+  }
+}
+
+export { counterScreen }
+```
+
+### Modifying the Counter
+
+When the increment button is clicked, the counter needs to be incremented and the count text updated. We can do that in the `incrementCounter` method:
+
+```ts
+class CounterScreen extends WidgetController {
+  // ...
+  private incrementCounter() {
+    this.count += 1
+    this.countText.update(() => {
+      this.countText.content = `${this.count}`
+    })
+  }
+  // ...
 }
 ```
 
-We use `context.idRegistry.newId` to create a new, **unique** ID for the `text` widget that displays the current count.
-The ID is  used to identify the instance of text that should be updated.
-Without the ID, Poly will not be able to know the correct `text` to update!
+Same for the decrement button:
+
+```ts
+class CounterScreen extends WidgetController {
+  // ...
+  private decrementCounter() {
+    this.count -= 1
+    this.countText.update(() => {
+      this.countText.content = `${this.count}`
+    })
+  }
+  // ...
+}
+```
+
+When updating any widget in Poly, the `update` method needs to be called.
+It accepts a callback in which updates on the widget should be done.
+The `update` method lets Poly know that the widget is updated and needs to be redrawn.
 
 Now, when the increment button is clicked, `incrementCounter` is called, which increases the `count` variable by one and updates the counter text with the new count.
 When the decrement button is clicked, `decrementCounter` is called, which decreases the `count` variable by one and updates the counter text accordingly.
@@ -291,13 +453,12 @@ When the decrement button is clicked, `decrementCounter` is called, which decrea
 
 Now that we have created the counter screen, let's import it in the main file and display it:
 
-```ts ins={6,36-39} ins=" createWidget "
+```ts ins={5,36-37}
 // src/main.ts
 import { createApplication, runApplication } from "poly/application";
 import { StdioMessageChannel } from "poly/bridge";
 import { createWindow } from "poly/window";
-import { initializeWidgets, createWidget } from "poly-widgets";
-import { counterScreen } from "./counter-screen.js";
+import { CounterScreen } from "./counter-screen.js";
 
 async function main() {
   const context = createApplication({
@@ -315,8 +476,6 @@ async function main() {
 
   const instance = runApplication(context);
 
-  initializeWidgets(context);
-
   createWindow(
     {
       title: "TestApp2",
@@ -328,18 +487,15 @@ async function main() {
     context,
   );
 
-  const screen = counterScreen(context);
-
-  createWidget(screen, "main", context);
+  const screen = new CounterScreen(context);
+  // obtain the root widget of the screen and show it in the "main" window
+  screen.widget().show({ window: "main" })
 
   await instance;
-  
 }
 
 main()
 ```
-
-The `screen` variable holds the widget tree returned by `counterScreen`. It is then passed to `createWidget` which instructs Poly to draw the widget tree in the window tagged `"main"`.
 
 ## Running the Application
 
@@ -368,7 +524,7 @@ MyNewApp/
 │   ├── MyNewApp.xcodeproj
 │   └── project.yml
 +├── build/
-│   └── bundle
++│   └── bundle
 └── app/
     ├── src/
     │   └── main.ts
