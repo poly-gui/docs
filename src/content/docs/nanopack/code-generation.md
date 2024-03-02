@@ -7,13 +7,14 @@ In order for the messages to be usable in code,
 the schemas must be first compiled to the desired programming languages via `nanoc` (pronounced _**na**-nock_),
 a compiler provided by NanoPack.
 
-## Installation
+## Download
 
-Currently, `nanoc` is not available as a pre-compiled binary, so it must be built and installed manually.
+Pre-built binaries of `nanoc` are published as [GitHub releases](https://github.com/poly-gui/nanoc/releases).
+Put the binary in a directory that is in PATH, or add the directory it is in to PATH, then it is ready to go.
 
-### Pre-requisites
+### Building `nanoc`
 
-To build, install, and use `nanoc`, the following requirements must be met:
+`nanoc` can also be built from the source code, which requires:
 
 - Go 1.20 or higher ([install link](https://go.dev/dl/))
 - Code formatter for the corresponding programming language installed because `nanoc` will use it to format the
@@ -23,10 +24,8 @@ To build, install, and use `nanoc`, the following requirements must be met:
     - TypeScript: `prettier` will be used via `npx`.
 
 :::note
-Make sure the installed binaries are added to PATH so that `nanoc` can find it.
+Make sure the installed binaries for the formatters are added to PATH so that `nanoc` can find it.
 :::
-
-### Steps
 
 Clone the `nanoc` repository [here](https://github.com/poly-gui/nanoc):
 
@@ -67,7 +66,7 @@ For non-Go developers, this is probably not applicable.
 This is an overview of the `nanoc` command:
 
 ```
-nanoc --language=[ts|swift|c++] [--factory-out=path] [...input-files]
+nanoc --language=[ts|swift|c++] [--factory-out=path] [--namespace=My.Nsp] [...input-files]
 ```
 
 |   Argument    |                                                Description                                                |
@@ -75,6 +74,7 @@ nanoc --language=[ts|swift|c++] [--factory-out=path] [...input-files]
 |  `language`   |                    (Required) The programming language the generated code should be in                    |
 | `factory-out` |               (Optional) The directory where the message factory code file should be put in               |
 | `input-files` | (Required) A space-delimited list of relative/absolute paths to the schema files that should be processed |
+|  `namespace`  |  (Optional) The namespace under which the generated code should be. Use dot notation, e.g. `My.Message`   |
 
 :::note[What is the message factory?]
 The message factory file contains a factory function that creates the correct type of message

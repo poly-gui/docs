@@ -14,7 +14,7 @@ Put the binary in a directory that is in PATH, or add the directory it is in to 
 
 The CLI can also be built from the source code, which requires:
 
-- [Go >= 1.20](https://go.dev/dl/)
+- [Go 1.20 or higher](https://go.dev/dl/)
 
 First, clone this repo:
 
