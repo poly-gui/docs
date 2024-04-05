@@ -20,44 +20,15 @@ The first point of interest is the following snippet
 
 ```ts
 const context = createApplication({
-  messageChannel: new StdioMessageChannel({
-    async *stdin() {
-      for await (const chunk of process.stdin) {
-        yield chunk;
-      }
-    },
-    async stdout(data: Uint8Array) {
-      await process.stdout.write(data);
-    },
-  }),
+  messageChannel: new StdioMessageChannel(),
 });
 ```
 
-The `createApplication` function, exported by `poly/application`, creates a context object that stores all the runtime information of the application,
+The `createApplication` function, exported by `poly`, creates a context object that stores all the runtime information of the application,
 such as created views and registered callbacks.
 Pass this `context` to any Poly API that asks for a context object.
 
 An instance of `StdioMessageChannel` is used as the channel between the portable layer and the native layer for exchanging messages.
-In order to be runtime independent, the constructor asks for an implementation of `stdin` and `stdout`.
-`stdin` expects an async generator which yields the bytes received from the stdin pipe of the process.
-`stdout` is an async function that writes the given bytes to the stdout pipe of the process.
-In this case, we are using the `process` API of Node.JS to exchange data through the stdio.
-
-You can adjust the implementations to the JavaScript runtime in which you wish to run the portable layer.
-For example, in [Bun](https://bun.sh), you would write the following:
-
-```ts
-new StdioMessageChannel({
-  async *stdin() {
-    for await (const chunk of Bun.stdin.stream()) {
-      yield Uint8Array.from(chunk);
-    }
-  },
-  async stdout(data: Uint8Array) {
-    await Bun.write(Bun.stdout, data);
-  },
-})
-```
 
 :::danger
 Poly only supports running the portable layer with Node.JS at the moment!
@@ -71,7 +42,7 @@ After creating the context object, it is used to start the application:
 const instance = runApplication(context);
 ```
 
-The `runApplication` function, also exported by `poly/application`,
+The `runApplication` function, also exported by `poly`,
 returns a `Promise` that will awaited at the end of the `main` function to keep the application alive.
 
 ### Application Logic
@@ -83,10 +54,10 @@ In this case of creating the counter app, this is where the UI of the counter an
 By default, the `main` function creates an empty window that has the application name as its title:
 
 ```ts
-createWindow(
+await createWindow(
   {
-    title: "TestApp2",
-    description: "A Poly application written in TypeScript.",
+    title: "Counter",
+    description: "A counter app written in TypeScript.",
     width: 600,
     height: 400,
     tag: "main",
@@ -98,37 +69,6 @@ createWindow(
 The `tag` is a handle to the window.
 It is useful, for example, when specifying where to display the created widgets, which we will get into later on this page.
 **It must be unique amongst all the windows created by the application.**
-
-:::caution
-Do not await any top-level function call here, even though you may be calling an awaitable function!
-
-```ts {"Do not await getUsers here:":9-10}
-// src/main.ts
-import { getUsers } from "./api.js"
-
-async function main() {
-  // ...
-  const instance = runApplication(context)
-  
-  createWindow(...)
-  
-  getUsers()
-  
-  await instance
-}
-```
-
-```ts {"await is OK inside the async function:":3-4}
-// src/api.ts
-async function getUsers(): Promise<User[]> {
-
-  const response = await fetch("https://api.com/users")
-  return response.json()
-}
-
-export { getUsers }
-```
-:::
 
 ### Keeping the Application Alive
 
@@ -219,7 +159,6 @@ class CounterScreen extends WidgetController {
   private count = 0
 
   private readonly countText: Text;
-
   constructor(context: ApplicationContext) {
     super(context)
 
@@ -453,7 +392,7 @@ When the decrement button is clicked, `decrementCounter` is called, which decrea
 
 Now that we have created the counter screen, let's import it in the main file and display it:
 
-```ts ins={5,36-37}
+```ts ins={5,27-28}
 // src/main.ts
 import { createApplication, runApplication } from "poly/application";
 import { StdioMessageChannel } from "poly/bridge";
@@ -462,16 +401,7 @@ import { CounterScreen } from "./counter-screen.js";
 
 async function main() {
   const context = createApplication({
-    messageChannel: new StdioMessageChannel({
-      async *stdin() {
-        for await (const chunk of process.stdin) {
-          yield chunk
-        }
-      },
-      async stdout(data: Uint8Array) {
-        await process.stdin.write(data);
-      },
-    }),
+    messageChannel: new StdioMessageChannel(),
   });
 
   const instance = runApplication(context);
