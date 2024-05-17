@@ -5,6 +5,11 @@ description: A guide in how to install and setup Poly
 
 All Poly applications are created and managed through the [`poly` CLI](https://www.github.com/poly-gui/cli).
 
+## Pre-requisites
+
+- [Xcodegen](https://github.com/yonaskolb/XcodeGen) for generating xcode projects on macOS
+- [pnpm](https://pnpm.io/) for installing node dependencies. in the future the CLI will be able to detect the correct package manager to use for isntalling dependencies
+
 ## Download
 
 Pre-built binaries of the CLI are published as [GitHub releases](https://github.com/poly-gui/cli/releases).
