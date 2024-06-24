@@ -8,7 +8,6 @@ All Poly applications are created and managed through the [`poly` CLI](https://w
 ## Pre-requisites
 
 - [Xcodegen](https://github.com/yonaskolb/XcodeGen) for generating xcode projects on macOS
-- [pnpm](https://pnpm.io/) for installing node dependencies. in the future the CLI will be able to detect the correct package manager to use for isntalling dependencies
 
 ## Download
 
